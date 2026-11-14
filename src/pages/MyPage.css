@@ -1,0 +1,201 @@
+.mypage {
+  min-height: 100vh;
+  margin: -8px;
+  background: #f5f8f3;
+  color: #111;
+  font-family: Arial, "Noto Sans KR", sans-serif;
+}
+
+.mypage-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 78px;
+  box-sizing: border-box;
+  min-height: 78px;
+  padding: 0 30px;
+  background: #fff;
+}
+
+.mypage-navigation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mypage-navigation .navigation-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 15px;
+  color: #111;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mypage-navigation .navigation-link[aria-current="page"] {
+  background: #e5eee1;
+}
+
+.mypage-header .register-link {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 162px;
+  min-height: 44px;
+  border: 2px solid #e8eee8;
+  border-radius: 15px;
+  background: #fff;
+  color: #111;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mypage-content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 38px 80px;
+}
+
+.mypage-title {
+  margin: 0 16px 27px;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.mypage-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.66fr) minmax(0, 1fr);
+  gap: 20px;
+}
+
+.profile-section,
+.account-info-section {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 348px;
+  border: 2px solid #e8eee8;
+  border-radius: 15px;
+  background: #fff;
+  font-size: 14px;
+}
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  padding: 21px 33px 16px;
+}
+
+.profile-description {
+  margin: -16px 0 21px 50px;
+  color: #555;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.profile-menu {
+  display: grid;
+  gap: 6px;
+}
+
+.profile-menu-link,
+.profile-menu-button,
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 47px;
+  padding: 8px 12px;
+  border: 1px solid #1d5039;
+  border-radius: 15px;
+  background: #fff;
+  color: #1d5039;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.profile-menu-link {
+  background: #1d5039;
+  color: #fff;
+}
+
+.logout-button {
+  margin-top: auto;
+}
+
+.account-info-section {
+  padding: 8px 40px 30px;
+}
+
+.account-info-fields {
+  display: grid;
+  gap: 15px;
+  width: 100%;
+  max-width: 332px;
+  margin-top: 20px;
+}
+
+.account-info-field {
+  display: grid;
+  gap: 7px;
+  color: #777;
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  .mypage-header {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .mypage-navigation {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .mypage-navigation .navigation-link {
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  .mypage-content {
+    padding: 28px 20px 48px;
+  }
+
+  .mypage-title {
+    margin: 0 0 20px;
+  }
+
+  .mypage-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .profile-section,
+  .account-info-section {
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .logout-button {
+    margin-top: 24px;
+  }
+}
