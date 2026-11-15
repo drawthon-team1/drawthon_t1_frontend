@@ -1,28 +1,33 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-// pages 폴더에서 7개의 화면(컴포넌트)을 불러옵니다.
+// pages 폴더에 있는 실제 9개의 화면(컴포넌트) 파일 이름에 맞춰서 불러옵니다.
 import Main from './pages/Main';
 import Login from './pages/Login';
-import Detail from './pages/Detail';
+import Signup from './pages/Signup';
 import Register from './pages/Register';
+import PostList from './pages/PostList';
+import PostDetail from './pages/PostDetail';
 import Match from './pages/Match';
-import Room from './pages/Room';
+import MatchSelect from './pages/MatchSelect';
 import MyPage from './pages/MyPage';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* path="주소"를 치면 element={<컴포넌트 />}를 보여주라는 명령어입니다 */}
+        {/* path="주소"를 치면 element={<컴포넌트 />}를 보여줍니다 */}
         <Route path="/" element={<Main />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         
-        {/* :id 는 나중에 1번공고, 2번방 등 변하는 숫자를 받기 위한 뚫린 구멍입니다 */}
-        <Route path="/detail/:id" element={<Detail />} /> 
-        
+        {/* 공고 관련 페이지 */}
+        <Route path="/postings" element={<PostList />} />
+        <Route path="/detail/:id" element={<PostDetail />} />
         <Route path="/register" element={<Register />} />
+        
+        {/* 팀 매칭 및 마이페이지 */}
         <Route path="/match" element={<Match />} />
-        <Route path="/room/:id" element={<Room />} />
+        <Route path="/match-select" element={<MatchSelect />} />
         <Route path="/mypage" element={<MyPage />} />
       </Routes>
     </BrowserRouter>
