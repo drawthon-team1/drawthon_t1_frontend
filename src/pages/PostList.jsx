@@ -1,51 +1,29 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { filterPosts } from './postListFilters';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import { getPostings } from '../api/postApi';
+import { getErrorMessage } from '../api/axios';
+import { toPostCard } from '../api/postFormat';
 import './PostList.css';
 
-const posts = [
-  {
-    id: 'harvest',
-    category: '유급',
-    compensation: '일당 100,000원',
-    title: '[농작물 수확] 오전 벼 수확 (하늘 농장)',
-    location: '충남 아산시',
-    hours: '08:00–12:00',
-    applicants: '신청 2/4 명',
-  },
-  {
-    id: 'weeding',
-    category: '봉사',
-    compensation: '봉사 3시간',
-    title: '[밭 메기] 텃밭 잡초 제거 (푸른들 농원)',
-    location: '충남 천안시',
-    hours: '09:00–12:00',
-    applicants: '신청 1/3 명',
-  },
-  {
-    id: 'greenhouse',
-    category: '유급',
-    compensation: '일당 110,000원',
-    title: '[비닐 씌우기] 하우스 비닐 덮기 (새봄 농장)',
-    location: '충남 예산군',
-    hours: '08:00–17:00',
-    applicants: '신청 3/4 명',
-  },
-  {
-    id: 'boxes',
-    category: '봉사',
-    compensation: '봉사 2시간',
-    title: '[기타] 수확 상자 정리 (햇살 농장)',
-    location: '충남 아산시',
-    hours: '14:00–16:00',
-    applicants: '신청 0/2 명',
-  },
-];
+// 화면 선택지 -> 백엔드 필터 값 (GET /api/v1/posting 파라미터)
+const DURATION_VALUES = {
+  '하루': 'ONE_DAY', '3일 이하': 'UP_TO_3_DAYS', '일주일 이하': 'UP_TO_1_WEEK',
+  '2주~1개월 미만': 'TWO_WEEKS_TO_1_MONTH', '1개월 이상': 'ONE_MONTH_OR_MORE',
+};
+const TIME_SLOT_VALUES = { '새벽': 'DAWN', '오전': 'MORNING', '오후': 'AFTERNOON', '저녁': 'EVENING', '야간': 'NIGHT' };
+const STATUS_VALUES = { '모집 중': 'RECRUITING', '마감 직전': 'CLOSING_SOON', '모집 완료': 'CLOSED' };
+const TASK_TYPE_VALUES = {
+  '수확': 'HARVEST', '선별·포장': 'SORTING_PACKING', '파종·재배': 'PLANTING_CULTIVATION', '제초': 'WEEDING', '기타': 'ETC',
+};
+const TAB_REWARD_TYPES = { '유급': 'WAGE', '봉사': 'VOLUNTEER_HOURS' };
 
-const durationOptions = ['하루', '3일 이하', '일주일 이하', '2주~1개월 미만', '1개월 이상'];
-const timeSlotOptions = ['새벽', '오전', '오후', '저녁', '야간'];
-const statusOptions = ['모집 중', '마감 직전', '모집 완료'];
-const taskTypeOptions = ['수확', '선별·포장', '파종·재배', '제초', '기타'];
+const durationOptions = Object.keys(DURATION_VALUES);
+const timeSlotOptions = Object.keys(TIME_SLOT_VALUES);
+const statusOptions = Object.keys(STATUS_VALUES);
+const taskTypeOptions = Object.keys(TASK_TYPE_VALUES);
+
+const toValues = (selected, mapping) => selected.map((label) => mapping[label]);
 
 const toggleOption = (setSelection, option) => {
   setSelection((current) => (
@@ -59,7 +37,8 @@ const PostList = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('전체');
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [displayedPosts, setDisplayedPosts] = useState(posts);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchError, setSearchError] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [region, setRegion] = useState({ city: '', district: '' });
@@ -69,14 +48,44 @@ const PostList = () => {
   const [status, setStatus] = useState([]);
   const [taskType, setTaskType] = useState([]);
 
-  const totalCount = posts.length;
-  const paidCount = posts.filter((post) => post.category === '유급' || post.category === '일자리').length;
-  const volunteerCount = posts.filter((post) => post.category === '봉사').length;
+  // 공고 유형 탭은 탭별 건수를 보여 주기 위해 서버가 아니라 화면에서 거르고, 나머지 조건은 서버 필터로 보낸다.
+  const loadPosts = useCallback(async (filters) => {
+    setLoading(true);
+    setSearchError('');
+    try {
+      setPosts(await getPostings(filters));
+    } catch (loadError) {
+      setSearchError(getErrorMessage(loadError, '공고를 불러오지 못했습니다.'));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+    getPostings({})
+      .then((data) => ({ data, error: '' }))
+      .catch((loadError) => ({ data: [], error: getErrorMessage(loadError, '공고를 불러오지 못했습니다.') }))
+      .then(({ data, error }) => {
+        if (ignore) return;
+        setPosts(data);
+        setSearchError(error);
+        setLoading(false);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   const tabs = [
-    { name: '전체', count: totalCount },
-    { name: '유급', count: paidCount },
-    { name: '봉사', count: volunteerCount },
+    { name: '전체', count: posts.length },
+    { name: '유급', count: posts.filter((post) => post.rewardType === 'WAGE').length },
+    { name: '봉사', count: posts.filter((post) => post.rewardType === 'VOLUNTEER_HOURS').length },
   ];
+  const displayedPosts = useMemo(() => posts
+    .filter((post) => activeTab === '전체' || post.rewardType === TAB_REWARD_TYPES[activeTab])
+    .map(toPostCard), [posts, activeTab]);
+
   const handleSearch = (event) => {
     event.preventDefault();
     if (schedule.startDate && schedule.endDate && schedule.startDate > schedule.endDate) {
@@ -84,22 +93,22 @@ const PostList = () => {
       return;
     }
 
-    setSearchError('');
-    setDisplayedPosts(filterPosts(posts, {
-      activeTab, searchKeyword, region, schedule, duration, timeSlot, status, taskType,
-    }));
+    loadPosts({
+      keyword: searchKeyword.trim(),
+      sigungu: region.city,
+      eupMyeonDong: region.district,
+      startDate: schedule.startDate,
+      endDate: schedule.endDate,
+      durations: toValues(duration, DURATION_VALUES),
+      timeSlots: toValues(timeSlot, TIME_SLOT_VALUES),
+      statuses: toValues(status, STATUS_VALUES),
+      workTypes: toValues(taskType, TASK_TYPE_VALUES),
+    });
   };
 
   return (
     <div className="post-list-page">
-      <header className="post-list-header">
-        <nav className="post-list-navigation" aria-label="주요 메뉴">
-          <Link className="navigation-link" to="/">홈</Link>
-          <Link className="navigation-link" to="/register">공고등록</Link>
-          <Link className="navigation-link" to="/match">팀 매칭</Link>
-          <Link className="navigation-link" to="/mypage">마이페이지</Link>
-        </nav>
-      </header>
+      <Header />
 
       <main className="post-list-content">
         <h1 className="post-list-title">공고 목록</h1>
@@ -262,7 +271,10 @@ const PostList = () => {
                     {' / '}
                     <span className="post-hours">{post.hours}</span>
                   </p>
-                  <p className="post-applicants">{post.applicants}</p>
+                  <p className="post-applicants">
+                    {post.applicants}
+                    {post.status && <span className="post-status"> · {post.status}</span>}
+                  </p>
                   <button
                     className="post-detail-button"
                     type="button"
@@ -274,7 +286,8 @@ const PostList = () => {
               </li>
             ))}
           </ul>
-          {displayedPosts.length === 0 && <p className="post-results-empty">검색 결과가 없습니다.</p>}
+          {loading && <p className="post-results-empty">공고를 불러오는 중입니다...</p>}
+          {!loading && displayedPosts.length === 0 && <p className="post-results-empty">검색 결과가 없습니다.</p>}
         </section>
       </main>
     </div>

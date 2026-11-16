@@ -1,70 +1,59 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Header from '../components/Header';
 import { Link, useNavigate } from 'react-router-dom';
+import { getPostings } from '../api/postApi';
+import { getErrorMessage } from '../api/axios';
+import { formatCompensation, formatHours, formatLocation, REWARD_TYPE_LABEL } from '../api/postFormat';
 import './MatchSelect.css';
 
-const samplePosts = [
-  {
-    id: 'harvest',
-    category: '유급',
-    title: '[농작물 수확] 오전 벼 수확',
-    farm: '하늘 농장',
-    location: '충남 아산시',
-    hours: '08:00–12:00',
-    compensation: '일당 100,000원',
-    applicants: 2,
-    capacity: 4,
-  },
-  {
-    id: 'weeding',
-    category: '봉사',
-    title: '[밭 메기] 텃밭 잡초 제거',
-    farm: '푸른들 농원',
-    location: '충남 천안시',
-    hours: '09:00–12:00',
-    compensation: '봉사 3시간',
-    applicants: 1,
-    capacity: 3,
-  },
-  {
-    id: 'greenhouse',
-    category: '유급',
-    title: '[비닐 씌우기] 하우스 비닐 덮기',
-    farm: '새봄 농장',
-    location: '충남 예산군',
-    hours: '08:00–17:00',
-    compensation: '일당 110,000원',
-    applicants: 3,
-    capacity: 4,
-  },
-  {
-    id: 'boxes',
-    category: '봉사',
-    title: '[기타] 수확 상자 정리',
-    farm: '햇살 농장',
-    location: '충남 아산시',
-    hours: '14:00–16:00',
-    compensation: '봉사 2시간',
-    applicants: 0,
-    capacity: 2,
-  },
-];
+const TABS = { '전체': null, '유급': 'WAGE', '봉사': 'VOLUNTEER_HOURS' };
 
-const MatchSelect = ({ selectedPost, onConfirmPost }) => {
+// 공고 API 응답을 이 화면의 카드 형태로 바꾼다.
+const toSelectPost = (post) => ({
+  id: post.id,
+  rewardType: post.rewardType,
+  category: REWARD_TYPE_LABEL[post.rewardType],
+  title: post.programTitle,
+  farm: post.registeringOrganizationName || '',
+  location: formatLocation(post),
+  hours: formatHours(post),
+  compensation: formatCompensation(post),
+  applicants: post.applicantCount ?? 0,
+  capacity: post.recruitmentCapacity || null,
+});
+
+const MatchSelect = ({ selectedPost, onConfirmPost, selectedTeam }) => {
   const navigate = useNavigate();
   const [draftPost, setDraftPost] = useState(selectedPost);
-  const teamSize = 2;
-  const remainingSlots = draftPost ? draftPost.capacity - draftPost.applicants : null;
+  const [posts, setPosts] = useState(null);
+  const [loadError, setLoadError] = useState('');
+  const [activeTab, setActiveTab] = useState('전체');
+
+  // 팀이 지원할 수 있는 모집 중 공고만 불러온다.
+  useEffect(() => {
+    let ignore = false;
+    getPostings({ statuses: ['RECRUITING'] })
+      .then((data) => ({ data: data.map(toSelectPost), error: '' }))
+      .catch((error) => ({ data: [], error: getErrorMessage(error, '공고를 불러오지 못했습니다.') }))
+      .then(({ data, error }) => {
+        if (ignore) return;
+        setPosts(data);
+        setLoadError(error);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  const visiblePosts = (posts || []).filter((post) => !TABS[activeTab] || post.rewardType === TABS[activeTab]);
+  // 팀 매칭 화면에서 고른 팀의 인원. 팀이 없으면 null
+  const teamSize = selectedTeam?.memberCount ?? null;
+  const remainingSlots = draftPost?.capacity ? draftPost.capacity - draftPost.applicants : null;
+  const notEnoughSlots = teamSize != null && remainingSlots != null && teamSize > remainingSlots;
 
   return (
     <div className="match-select-page">
-      <header className="match-select-header">
-        <nav className="match-select-navigation" aria-label="주요 메뉴">
-          <Link className="navigation-link" to="/">홈</Link>
-          <Link className="navigation-link" to="/register">공고등록</Link>
-          <Link className="navigation-link" to="/match">팀 매칭</Link>
-          <Link className="navigation-link" to="/mypage">마이페이지</Link>
-        </nav>
-      </header>
+      <Header />
       {/* 🚨 여기에 있던 두 번째 </header> 불량 태그를 삭제했습니다! */}
 
       <main className="match-select-content">
@@ -80,15 +69,26 @@ const MatchSelect = ({ selectedPost, onConfirmPost }) => {
           <section className="select-post-list-section" aria-labelledby="select-post-list-title">
             <h2 id="select-post-list-title">공고 목록</h2>
             <div className="post-filter-group" aria-label="공고 종류">
-              <button className="post-filter-button" type="button" disabled>전체</button>
-              <button className="post-filter-button" type="button" disabled>유급</button>
-              <button className="post-filter-button" type="button" disabled>봉사</button>
+              {Object.keys(TABS).map((tab) => (
+                <button
+                  className="post-filter-button"
+                  type="button"
+                  key={tab}
+                  aria-pressed={activeTab === tab}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
+            {posts === null && <p className="page-state">공고를 불러오는 중입니다...</p>}
+            {loadError && <p className="form-error" role="alert">{loadError}</p>}
+            {posts && !loadError && visiblePosts.length === 0 && <p className="page-state">모집 중인 공고가 없습니다.</p>}
 
             <fieldset className="post-selection-group">
               <legend>공고 선택</legend>
               <ul className="select-post-list">
-                {samplePosts.map((post) => (
+                {visiblePosts.map((post) => (
                   <li className="select-post-list-item" key={post.id}>
                     <label className="post-selection-option">
                       <input
@@ -102,7 +102,7 @@ const MatchSelect = ({ selectedPost, onConfirmPost }) => {
                         <span className="post-selection-heading">
                           <span className="post-selection-category">{post.category}</span>
                           <span className="post-selection-title">
-                            {post.title} ({post.farm})
+                            {post.title}{post.farm && ` (${post.farm})`}
                           </span>
                           <span className="post-selection-compensation">{post.compensation}</span>
                         </span>
@@ -110,11 +110,11 @@ const MatchSelect = ({ selectedPost, onConfirmPost }) => {
                           <span className="post-selection-location">{post.location}</span>
                           {' / '}
                           <span className="post-selection-hours">{post.hours}</span>
-                          {post.capacity - post.applicants === 1 && (
+                          {post.capacity && post.capacity - post.applicants === 1 && (
                             <span className="post-selection-remaining">남은 자리 1명</span>
                           )}
                           <span className="post-selection-applicants">
-                            신청 {post.applicants}/{post.capacity} 명
+                            신청 {post.applicants}/{post.capacity ?? '제한 없음'} 명
                           </span>
                         </span>
                       </span>
@@ -132,7 +132,7 @@ const MatchSelect = ({ selectedPost, onConfirmPost }) => {
                 <span className="selected-post-category">{draftPost.category}</span>
                 <h3 className="selected-post-name">{draftPost.title}</h3>
                 <p className="selected-post-location">
-                  {draftPost.farm} / {draftPost.location}
+                  {draftPost.farm ? `${draftPost.farm} / ${draftPost.location}` : draftPost.location}
                 </p>
                 <dl className="selected-post-details">
                   <div className="selected-post-detail">
@@ -145,16 +145,18 @@ const MatchSelect = ({ selectedPost, onConfirmPost }) => {
                   </div>
                   <div className="selected-post-detail">
                     <dt>공고 신청 현황</dt>
-                    <dd>{draftPost.applicants} / {draftPost.capacity}명</dd>
+                    <dd>{draftPost.applicants} / {draftPost.capacity ?? '제한 없음'}명</dd>
                   </div>
                   <div className="selected-post-detail">
                     <dt>내 팀 참여 인원</dt>
-                    <dd>{teamSize}명</dd>
+                    <dd>{teamSize != null ? `${teamSize}명 (${selectedTeam.name})` : '팀을 먼저 골라 주세요'}</dd>
                   </div>
                 </dl>
                 <p className="selected-post-availability">
-                  남은 자리 {remainingSlots}명 / 내 팀 참여 인원 {teamSize}명
+                  남은 자리 {remainingSlots ?? '제한 없음'}{remainingSlots != null && '명'}
+                  {teamSize != null && ` / 내 팀 참여 인원 ${teamSize}명`}
                 </p>
+                {notEnoughSlots && <p className="form-error">남은 자리보다 팀 인원이 많습니다.</p>}
               </>
             ) : (
               <p>공고를 선택해 주세요.</p>

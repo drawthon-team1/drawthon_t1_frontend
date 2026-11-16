@@ -1,0 +1,101 @@
+/* 모든 화면 공통 헤더. PR #3에서 정한 헤더 스타일(가운데 정렬, 활성 메뉴 연두색 배경)을 기준으로 통일 */
+/* 가운데 메뉴와 오른쪽 사용자 표시가 겹치지 않도록 3칸 그리드로 배치한다 */
+.site-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  column-gap: 16px;
+  box-sizing: border-box;
+  min-height: 60px;
+  padding: 8px 30px;
+  background: #fff;
+  border-bottom: 1px solid #eef2ee;
+}
+
+.site-navigation {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.site-navigation .navigation-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 100px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 15px;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.site-navigation .navigation-link.is-active {
+  background: #e5eee1;
+}
+
+.site-navigation .navigation-button:hover,
+.site-navigation .navigation-link:hover {
+  background: #f1f5f0;
+}
+
+.site-user {
+  grid-column: 3;
+  justify-self: end;
+  margin: 0;
+  white-space: nowrap;
+  color: #555;
+  font-size: 14px;
+}
+
+.site-user-role {
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #1d5039;
+  color: #fff;
+  font-size: 12px;
+}
+
+.auth-loading {
+  padding: 40px;
+  text-align: center;
+  color: #555;
+}
+
+@media (max-width: 1100px) {
+  .site-header {
+    grid-template-columns: 1fr;
+    row-gap: 4px;
+  }
+
+  .site-navigation,
+  .site-user {
+    grid-column: 1;
+    justify-self: center;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .site-navigation {
+    gap: 8px;
+  }
+
+  .site-navigation .navigation-link {
+    min-height: 38px;
+    min-width: 0;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+}

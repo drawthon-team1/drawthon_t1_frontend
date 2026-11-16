@@ -1,17 +1,39 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import { signup, signupAdmin } from '../api/authApi';
+import { getErrorMessage } from '../api/axios';
 import './Signup.css';
 
 const Signup = () => {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: '', password: '', nickname: '', isAdmin: false });
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setForm((current) => ({ ...current, [name]: type === 'checkbox' ? checked : value }));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setError('');
+    setSubmitting(true);
+    try {
+      const request = { email: form.email, password: form.password, nickname: form.nickname };
+      await (form.isAdmin ? signupAdmin(request) : signup(request));
+      navigate('/login', { state: { email: form.email, message: '회원가입이 완료되었습니다. 로그인해 주세요.' } });
+    } catch (signupError) {
+      setError(getErrorMessage(signupError, '회원가입에 실패했습니다.'));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="signup-page">
-      <header className="signup-header">
-        <nav className="signup-navigation" aria-label="회원 메뉴">
-          <a className="login-link" href="/login">로그인</a>
-        </nav>
-      </header>
+      <Header />
 
       <main className="signup-container">
         <section className="signup-hero" aria-label="농촌 일자리 소개">
@@ -36,6 +58,8 @@ const Signup = () => {
                 type="email"
                 autoComplete="email"
                 required
+                value={form.email}
+                onChange={handleChange}
               />
             </div>
 
@@ -47,22 +71,35 @@ const Signup = () => {
                 type="password"
                 autoComplete="new-password"
                 required
+                value={form.password}
+                onChange={handleChange}
               />
             </div>
 
             <div className="input-group">
-              <label htmlFor="signup-username">아이디</label>
+              {/* 백엔드 회원 정보는 아이디 대신 닉네임을 받는다 */}
+              <label htmlFor="signup-nickname">닉네임</label>
               <input
-                id="signup-username"
-                name="username"
+                id="signup-nickname"
+                name="nickname"
                 type="text"
-                autoComplete="username"
+                autoComplete="nickname"
+                maxLength={40}
                 required
+                value={form.nickname}
+                onChange={handleChange}
               />
             </div>
 
-            <button className="signup-submit-button" type="submit">
-              회원가입
+            <label className="signup-admin-option">
+              <input name="isAdmin" type="checkbox" checked={form.isAdmin} onChange={handleChange} />
+              관리자(공고 등록자)로 가입
+            </label>
+
+            {error && <p className="form-error" role="alert">{error}</p>}
+
+            <button className="signup-submit-button" type="submit" disabled={submitting}>
+              {submitting ? '가입 중...' : '회원가입'}
             </button>
           </form>
         </section>

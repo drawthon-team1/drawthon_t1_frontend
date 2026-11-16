@@ -280,3 +280,94 @@
     padding: 0 24px;
   }
 }
+/* 백엔드 연동으로 추가한 요소 */
+.waiting-room-card {
+  cursor: pointer;
+}
+
+.waiting-room-card.is-selected {
+  outline: 3px solid #1d5039;
+}
+
+.waiting-room-role {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #e5eee1;
+  color: #1d5039;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.team-create-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.team-create-form input {
+  flex: 1;
+  min-width: 200px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #ccd6cc;
+  border-radius: 10px;
+}
+
+.team-create-form button {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #1d5039;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.team-invite-hint,
+.team-invite-link {
+  margin: 8px 0 0;
+  color: #555;
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.team-invite-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.invite-copy-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #ccd6cc;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d5039;
+  cursor: pointer;
+}
+
+.invite-copy-icon:hover {
+  background: #e5eee1;
+}
+
+.invite-copy-icon.is-copied {
+  border-color: #1d5039;
+  background: #1d5039;
+  color: #fff;
+}
+
+.invite-copied-text {
+  flex-shrink: 0;
+  color: #1d5039;
+  font-weight: 700;
+}

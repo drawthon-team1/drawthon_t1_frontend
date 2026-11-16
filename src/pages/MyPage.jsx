@@ -1,17 +1,22 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import { useAuth } from '../auth/AuthContext';
 import './MyPage.css';
 
+const ROLE_LABEL = { ADMIN: '관리자', USER: '일반 회원' };
+
 const MyPage = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
   return (
     <div className="mypage">
-      <header className="mypage-header">
-        <nav className="mypage-navigation" aria-label="주요 메뉴">
-          <Link className="navigation-link" to="/">홈</Link>
-          <Link className="navigation-link" to="/register">공고등록</Link>
-          <Link className="navigation-link" to="/match">팀 매칭</Link>
-          <Link className="navigation-link" to="/mypage" aria-current="page">마이페이지</Link>
-        </nav>
-      </header>
+      <Header />
 
       <main className="mypage-content">
         <h1 className="mypage-title">마이페이지</h1>
@@ -25,6 +30,7 @@ const MyPage = () => {
               <a className="profile-menu-link" href="#account-info" aria-current="page">
                 내 계정 정보
               </a>
+              {/* 아래 두 기능은 백엔드 API가 아직 없다 */}
               <button className="profile-menu-button" type="button" disabled>
                 내 공고의 매칭 학생 목록
               </button>
@@ -33,7 +39,7 @@ const MyPage = () => {
               </button>
             </nav>
 
-            <button className="logout-button" type="button" disabled>
+            <button className="logout-button" type="button" onClick={handleLogout}>
               로그아웃
             </button>
           </aside>
@@ -43,11 +49,15 @@ const MyPage = () => {
             <div className="account-info-fields">
               <div className="account-info-field">
                 <label htmlFor="account-email">이메일</label>
-                <input id="account-email" name="email" type="email" autoComplete="email" readOnly />
+                <input id="account-email" name="email" type="email" value={user.email} readOnly />
               </div>
               <div className="account-info-field">
-                <label htmlFor="account-username">아이디</label>
-                <input id="account-username" name="username" type="text" autoComplete="username" readOnly />
+                <label htmlFor="account-nickname">닉네임</label>
+                <input id="account-nickname" name="nickname" type="text" value={user.nickname} readOnly />
+              </div>
+              <div className="account-info-field">
+                <label htmlFor="account-role">회원 유형</label>
+                <input id="account-role" name="role" type="text" value={ROLE_LABEL[user.role] || user.role} readOnly />
               </div>
             </div>
           </section>
