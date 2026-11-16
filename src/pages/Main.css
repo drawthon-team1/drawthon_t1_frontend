@@ -1,4 +1,10 @@
+/* ============================================
+   LAYOUT & PAGE STYLES
+   ============================================ */
+
 .main-page {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   margin: -8px;
   background: #f5f8f3;
@@ -9,45 +15,67 @@
 .main-header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 60px;
+  justify-content: center;
   box-sizing: border-box;
-  min-height: 46px;
-  padding: 0 18px;
+  min-height: 60px;
+  padding: 0 30px;
   background: #fff;
 }
+
+.main-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.97fr);
+  gap: 24px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 37px 43px 80px;
+  flex: 1;
+  align-self: center;
+  align-content: center;
+}
+
+/* ============================================
+   HEADER NAVIGATION
+   ============================================ */
 
 .main-navigation {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 40px;
 }
 
 .main-navigation .navigation-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 30px;
-  padding: 0 10px;
-  border-radius: 10px;
+  min-height: 44px;
+  min-width: 110px;
+  padding: 0;
+  border-radius: 15px;
   color: #111;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
+  transition: background-color 0.2s;
 }
 
-.main-navigation .navigation-link:first-child {
+.main-navigation .navigation-link[aria-current="page"] {
   background: #e5eee1;
 }
 
-.main-header .register-link,
-.main-page .team-matching-link,
-.main-page .map-register-link {
+.main-navigation .navigation-link:hover:not(:first-child) {
+  background: #f5f5f5;
+}
+
+.main-header .register-link {
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  width: 108px;
   min-height: 30px;
   border: 1px solid #e4ece4;
   border-radius: 10px;
@@ -56,32 +84,31 @@
   font-size: 11px;
   font-weight: 700;
   text-decoration: none;
-}
-
-.main-header .register-link {
-  width: 108px;
   flex-shrink: 0;
+  transition: background-color 0.2s;
 }
 
-.main-content {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.97fr);
-  gap: 9px;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 39px 34px 80px 17px;
+.main-header .register-link:hover {
+  background: #f5f5f5;
 }
+
+/* ============================================
+   LEFT SECTION - MAP
+   ============================================ */
 
 .nearby-jobs-section {
   min-width: 0;
-  font-size: 10px;
 }
 
-.nearby-posts-section {
-  min-width: 0;
-  font-size: 9px;
+#nearby-jobs-title {
+  margin: 0 0 16px 0;
+  padding: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.5;
+  letter-spacing: 0;
+  display: block;
 }
 
 .map-container {
@@ -99,15 +126,16 @@
 
 .map-title {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 14px;
+  left: 14px;
   margin: 0;
-  padding: 4px 11px;
+  padding: 8px 14px;
   border-radius: 5px;
   background: #fff;
   color: #204e39;
-  font-size: 9px;
+  font-size: 14px;
   line-height: 1.3;
+  font-weight: 700;
 }
 
 .map-locations {
@@ -118,11 +146,11 @@
 
 .map-location {
   position: absolute;
-  padding: 3px 6px;
+  padding: 6px 10px;
   border-radius: 5px;
   background: #fff;
   color: #204e39;
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 700;
   line-height: 1;
   transform: translateX(-50%);
@@ -132,8 +160,8 @@
   position: absolute;
   bottom: calc(100% + 3px);
   left: 50%;
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: radial-gradient(circle, #fff 0 2px, #286d4b 2.5px);
   content: "";
@@ -157,11 +185,11 @@
 
 .map-caption {
   position: absolute;
-  bottom: 10px;
-  left: 8px;
+  bottom: 14px;
+  left: 14px;
   margin: 0;
   color: #58695e;
-  font-size: 10px;
+  font-size: 13px;
 }
 
 .map-actions {
@@ -170,101 +198,206 @@
   margin: 20px 12px 0;
 }
 
-.main-page .team-matching-link,
-.main-page .map-register-link {
+.team-matching-link,
+.map-register-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   width: 108px;
+  min-height: 30px;
+  border: 1px solid #e4ece4;
+  border-radius: 10px;
+  color: #111;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.2s;
 }
 
-.main-page .map-register-link {
+.team-matching-link:hover {
+  background: #f5f5f5;
+}
+
+.map-register-link {
   border-color: #1d5039;
   background: #1d5039;
   color: #fff;
 }
 
-.main-page .post-list {
+.map-register-link:hover {
+  background: #15402f;
+}
+
+/* ============================================
+   RIGHT SECTION - POST LIST
+   ============================================ */
+
+.nearby-posts-section {
+  min-width: 0;
+}
+
+#nearby-posts-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 16px 0;
+  padding: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+#nearby-posts-title h2 {
+  margin: 0;
+  padding: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.5;
+  letter-spacing: 0;
+  display: inline;
+}
+
+.more-link {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 9px 14px;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  background: #fff;
+}
+
+.more-link:hover {
+  color: #111;
+  border-color: #bbb;
+  background: #fafafa;
+}
+
+.post-list {
   display: grid;
-  gap: 12px;
+  gap: 14px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.main-page .post-list-item {
+.post-list-item {
   min-width: 0;
 }
 
-.main-page .post-card {
+/* ============================================
+   POST CARD STYLES
+   ============================================ */
+
+.post-card {
   position: relative;
   box-sizing: border-box;
-  min-height: 86px;
-  padding: 8px 8px 24px;
+  min-height: 124px;
+  padding: 16px 16px 48px;
   border: 1px solid #e4ece4;
   border-radius: 10px;
   background: #fff;
 }
 
-.main-page .post-header {
+.post-header {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-.main-page .post-category {
+.post-category {
   flex-shrink: 0;
-  padding: 4px 9px;
-  border-radius: 12px;
+  padding: 5px 10px;
+  border-radius: 4px;
   background: #ffebc9;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
-.main-page .post-list-item:nth-child(2) .post-category {
+.post-list-item:nth-child(2) .post-category {
   background: #e5eee1;
 }
 
-.main-page .post-compensation {
+.post-compensation {
   margin: 0;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1.2;
+  color: #111;
 }
 
-.main-page .post-title {
-  margin: 4px 0 2px 9px;
-  font-size: 10px;
-  font-weight: 700;
+.post-title {
+  margin: 6px 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
   line-height: 1.3;
+  color: #111;
 }
 
-.main-page .post-details {
-  margin: 0 0 0 9px;
-  color: #777;
-  font-size: 9px;
+.post-details {
+  margin: 0;
+  font-size: 13px;
   line-height: 1.4;
+  color: #777;
 }
 
-.main-page .post-applicants {
-  margin-left: 12px;
+.post-location {
+  color: #777;
+}
+
+.post-hours {
+  color: #777;
+}
+
+.post-applicants {
+  margin-left: 8px;
   color: #e00000;
   font-weight: 700;
 }
 
-.main-page .post-detail-button {
+.post-detail-button {
   position: absolute;
-  right: 20px;
-  bottom: 8px;
+  right: 16px;
+  bottom: 12px;
   box-sizing: border-box;
-  width: 67px;
-  min-height: 19px;
+  width: 90px;
+  min-height: 32px;
   border: 1px solid #e4ece4;
-  border-radius: 10px;
+  border-radius: 6px;
   background: #fff;
   color: #111;
   font-family: inherit;
-  font-size: 9px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
+
+.post-detail-button:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+
+.post-detail-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
 
 @media (max-width: 600px) {
   .main-header {

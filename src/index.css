@@ -1,0 +1,82 @@
+/* 여러 화면에서 함께 쓰는 안내·오류 문구와 결과 패널 */
+.form-error {
+  margin: 8px 0;
+  color: #c0392b;
+  font-size: 14px;
+  white-space: pre-line;
+}
+
+.form-notice {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #e5eee1;
+  color: #1d5039;
+  font-size: 14px;
+}
+
+.result-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 24px auto;
+  padding: 28px;
+  max-width: 560px;
+  border: 2px solid #e5eee1;
+  border-radius: 15px;
+  background: #fff;
+  text-align: center;
+}
+
+.result-panel h2 {
+  margin: 0;
+  color: #1d5039;
+}
+
+.result-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.result-panel-actions a,
+.result-panel-actions button {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 2px solid #e8eee8;
+  border-radius: 12px;
+  background: #fff;
+  color: #111;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.result-panel-actions .primary {
+  border-color: #1d5039;
+  background: #1d5039;
+  color: #fff;
+}
+
+.signup-admin-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.page-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: #555;
+}
+
+.main-notice {
+  max-width: 1100px;
+  margin: 16px auto 0;
+}

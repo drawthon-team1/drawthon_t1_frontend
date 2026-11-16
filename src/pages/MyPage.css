@@ -9,10 +9,9 @@
 .mypage-header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 78px;
+  justify-content: center;
   box-sizing: border-box;
-  min-height: 78px;
+  min-height: 60px;
   padding: 0 30px;
   background: #fff;
 }
@@ -20,7 +19,7 @@
 .mypage-navigation {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 40px;
 }
 
 .mypage-navigation .navigation-link {
@@ -28,10 +27,11 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0 16px;
+  min-width: 110px;
+  padding: 0;
   border-radius: 15px;
   color: #111;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
