@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Main.css';
 
 const samplePosts = [
@@ -32,6 +32,8 @@ const samplePosts = [
 ];
 
 const Main = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="main-page">
       <header className="main-header">
@@ -41,7 +43,6 @@ const Main = () => {
           <Link className="navigation-link" to="/match">팀 매칭</Link>
           <Link className="navigation-link" to="/mypage">마이페이지</Link>
         </nav>
-        <Link className="register-link" to="/register">공고 등록</Link>
       </header>
 
       <main className="main-content">
@@ -55,15 +56,14 @@ const Main = () => {
               <li className="map-location map-location-yesan">예산군</li>
             </ul>
             <p className="map-caption">시안용 지도</p>
-          </section>
-          <div className="map-actions">
-            <Link className="team-matching-link" to="/match">팀매칭</Link>
-            <Link className="map-register-link" to="/register">공고 등록</Link>
-          </div>
         </section>
+      </section>
 
         <section className="nearby-posts-section" aria-labelledby="nearby-posts-title">
-          <h2 id="nearby-posts-title">내 주변 공고</h2>
+          <div id="nearby-posts-title">
+            <h2>내 주변 공고</h2>
+            <Link className="more-link" to="/postings">더 보기 &gt;</Link>
+          </div>
           <ul className="post-list">
             {samplePosts.map((post) => (
               <li className="post-list-item" key={post.id}>
@@ -80,7 +80,12 @@ const Main = () => {
                     {' '}
                     <span className="post-applicants">{post.applicants}</span>
                   </p>
-                  <button className="post-detail-button" type="button" disabled>
+                  <button
+                    className="post-detail-button"
+                    type="button"
+                    onClick={() => navigate(`/detail/${post.id}`)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     상세 보기
                   </button>
                 </article>

@@ -9,10 +9,9 @@
 .post-detail-header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 78px;
+  justify-content: center;
   box-sizing: border-box;
-  min-height: 78px;
+  min-height: 60px;
   padding: 0 30px;
   background: #fff;
 }
@@ -20,7 +19,7 @@
 .post-detail-navigation {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 40px;
 }
 
 .post-detail-navigation .navigation-link {
@@ -28,16 +27,17 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0 16px;
+  min-width: 110px;
+  padding: 0;
   border-radius: 15px;
   color: #111;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }
 
-.post-detail-navigation .navigation-link:first-child {
+.post-detail-navigation .navigation-link[aria-current="page"] {
   background: #e5eee1;
 }
 
@@ -67,16 +67,17 @@
 }
 
 .post-detail-title {
-  margin: 0 0 30px 3px;
-  font-size: 24px;
+  margin: 0 0 24px 0;
+  font-size: 18px;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.4;
+  color: #111;
 }
 
 .post-detail-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.01fr);
-  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: 20px;
   align-items: start;
 }
 
@@ -89,18 +90,28 @@
   box-sizing: border-box;
   width: 100%;
   aspect-ratio: 477 / 255;
-  margin: 0 0 22px;
+  margin: 0 0 20px;
   background-color: #e5eee1;
   background-image: url("/images/post-detail.jpg");
   background-position: center;
   background-size: cover;
   color: #555;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#post-description-title {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #111;
 }
 
 .post-description {
-  margin: -12px 13px 0;
-  color: #777;
-  font-size: 12px;
+  margin: 0;
+  color: #666;
+  font-size: 11px;
   line-height: 1.5;
 }
 
@@ -108,10 +119,10 @@
   position: relative;
   box-sizing: border-box;
   min-width: 0;
-  min-height: 382px;
-  padding: 24px 34px 38px;
-  border: 2px solid #e8eee8;
-  border-radius: 15px;
+  min-height: auto;
+  padding: 20px;
+  border: 1px solid #e8ebe8;
+  border-radius: 8px;
   background: #fff;
 }
 
@@ -119,66 +130,95 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 5px;
+  margin: 0 0 20px 0;
 }
 
 .post-detail-page .post-category {
-  padding: 6px 15px;
-  border-radius: 14px;
+  padding: 4px 10px;
+  border-radius: 4px;
   background: #ffebc9;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
   line-height: 1.2;
+  white-space: nowrap;
 }
 
 .post-detail-page .post-compensation {
   margin: 0;
-  font-size: 19px;
+  font-size: 13px;
   font-weight: 700;
+  line-height: 1.3;
 }
 
 .post-information {
   display: grid;
-  gap: 18px;
-  margin: 35px 0 38px;
+  gap: 14px;
+  margin: 0 0 20px 0;
 }
 
 .post-information-row {
   display: flex;
   align-items: baseline;
-  color: #6f6b6b;
-  font-size: 13px;
+  color: #666;
+  font-size: 11px;
+  gap: 0;
+}
+
+.post-information-row dt {
+  flex-shrink: 0;
+  width: 60px;
+  font-weight: 600;
+  color: #111;
+}
+
+.post-information-row dd {
+  margin: 0;
+  flex: 1;
+  color: #666;
 }
 
 .post-detail-page .post-more-details-button {
   position: absolute;
-  top: 85px;
-  right: 23px;
+  top: auto;
+  right: auto;
   box-sizing: border-box;
-  width: 101px;
-  min-height: 28px;
-  border: 2px solid #e8eee8;
-  border-radius: 14px;
-  background: #fff;
+  width: auto;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: #111;
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 0;
+  display: none;
 }
 
 .post-detail-page .post-apply-button {
   display: block;
   box-sizing: border-box;
-  width: calc(100% - 74px);
-  min-height: 48px;
-  margin: 0 auto;
+  width: 100%;
+  min-height: 42px;
+  margin: 0;
   border: 0;
-  border-radius: 15px;
+  border-radius: 8px;
   background: #1d5039;
   color: #fff;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.post-detail-page .post-apply-button:hover:not(:disabled) {
+  background: #154030;
+}
+
+.post-detail-page .post-apply-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 @media (max-width: 700px) {

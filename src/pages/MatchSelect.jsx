@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './MatchSelect.css';
 
 const samplePosts = [
@@ -48,10 +49,11 @@ const samplePosts = [
   },
 ];
 
-const MatchSelect = () => {
-  const selectedPost = samplePosts[0];
+const MatchSelect = ({ selectedPost, onConfirmPost }) => {
+  const navigate = useNavigate();
+  const [draftPost, setDraftPost] = useState(selectedPost);
   const teamSize = 2;
-  const remainingSlots = selectedPost.capacity - selectedPost.applicants;
+  const remainingSlots = draftPost ? draftPost.capacity - draftPost.applicants : null;
 
   return (
     <div className="match-select-page">
@@ -62,8 +64,8 @@ const MatchSelect = () => {
           <Link className="navigation-link" to="/match">팀 매칭</Link>
           <Link className="navigation-link" to="/mypage">마이페이지</Link>
         </nav>
-        <Link className="register-link" to="/register">공고 등록</Link>
       </header>
+      {/* 🚨 여기에 있던 두 번째 </header> 불량 태그를 삭제했습니다! */}
 
       <main className="match-select-content">
         <Link className="back-to-match-link" to="/match">
@@ -86,15 +88,15 @@ const MatchSelect = () => {
             <fieldset className="post-selection-group">
               <legend>공고 선택</legend>
               <ul className="select-post-list">
-                {samplePosts.map((post, index) => (
+                {samplePosts.map((post) => (
                   <li className="select-post-list-item" key={post.id}>
                     <label className="post-selection-option">
                       <input
                         type="radio"
                         name="selectedPost"
                         value={post.id}
-                        defaultChecked={index === 0}
-                        disabled
+                        checked={draftPost?.id === post.id}
+                        onChange={() => setDraftPost(post)}
                       />
                       <span className="post-selection-content">
                         <span className="post-selection-heading">
@@ -125,33 +127,47 @@ const MatchSelect = () => {
 
           <section className="selected-post-section" aria-labelledby="selected-post-title">
             <h2 id="selected-post-title">선택한 공고</h2>
-            <span className="selected-post-category">{selectedPost.category}</span>
-            <h3 className="selected-post-name">{selectedPost.title}</h3>
-            <p className="selected-post-location">
-              {selectedPost.farm} / {selectedPost.location}
-            </p>
-            <dl className="selected-post-details">
-              <div className="selected-post-detail">
-                <dt>근무 시간</dt>
-                <dd>{selectedPost.hours}</dd>
-              </div>
-              <div className="selected-post-detail">
-                <dt>보상</dt>
-                <dd>{selectedPost.compensation}</dd>
-              </div>
-              <div className="selected-post-detail">
-                <dt>공고 신청 현황</dt>
-                <dd>{selectedPost.applicants} / {selectedPost.capacity}명</dd>
-              </div>
-              <div className="selected-post-detail">
-                <dt>내 팀 참여 인원</dt>
-                <dd>{teamSize}명</dd>
-              </div>
-            </dl>
-            <p className="selected-post-availability">
-              남은 자리 {remainingSlots}명 / 내 팀 참여 인원 {teamSize}명
-            </p>
-            <button className="confirm-post-button" type="button" disabled>
+            {draftPost ? (
+              <>
+                <span className="selected-post-category">{draftPost.category}</span>
+                <h3 className="selected-post-name">{draftPost.title}</h3>
+                <p className="selected-post-location">
+                  {draftPost.farm} / {draftPost.location}
+                </p>
+                <dl className="selected-post-details">
+                  <div className="selected-post-detail">
+                    <dt>근무 시간</dt>
+                    <dd>{draftPost.hours}</dd>
+                  </div>
+                  <div className="selected-post-detail">
+                    <dt>보상</dt>
+                    <dd>{draftPost.compensation}</dd>
+                  </div>
+                  <div className="selected-post-detail">
+                    <dt>공고 신청 현황</dt>
+                    <dd>{draftPost.applicants} / {draftPost.capacity}명</dd>
+                  </div>
+                  <div className="selected-post-detail">
+                    <dt>내 팀 참여 인원</dt>
+                    <dd>{teamSize}명</dd>
+                  </div>
+                </dl>
+                <p className="selected-post-availability">
+                  남은 자리 {remainingSlots}명 / 내 팀 참여 인원 {teamSize}명
+                </p>
+              </>
+            ) : (
+              <p>공고를 선택해 주세요.</p>
+            )}
+            <button
+              className="confirm-post-button"
+              type="button"
+              disabled={!draftPost}
+              onClick={() => {
+                onConfirmPost(draftPost);
+                navigate('/match');
+              }}
+            >
               이 공고로 확정
             </button>
           </section>

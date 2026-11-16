@@ -11,7 +11,6 @@ const PostDetail = () => {
           <Link className="navigation-link" to="/match">팀 매칭</Link>
           <Link className="navigation-link" to="/mypage">마이페이지</Link>
         </nav>
-        <Link className="register-link" to="/register">공고 등록</Link>
       </header>
 
       <main className="post-detail-content">

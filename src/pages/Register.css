@@ -1,3 +1,40 @@
+/* ============================================
+   UNIFIED INPUT STYLES
+   ============================================ */
+
+/* 모든 input, textarea, select 태그에 통일된 스타일 적용 */
+.form-input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  color: #111;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.form-input:focus {
+  outline: 2px solid #1d5039;
+  outline-offset: -1px;
+}
+
+.form-input::placeholder {
+  color: #aaa;
+}
+
+textarea.form-input {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* ============================================
+   PAGE STYLES
+   ============================================ */
+
 .register-page {
   min-height: 100vh;
   margin: -8px;
@@ -9,10 +46,9 @@
 .register-header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 78px;
+  justify-content: center;
   box-sizing: border-box;
-  min-height: 78px;
+  min-height: 60px;
   padding: 0 30px;
   background: #fff;
 }
@@ -20,7 +56,7 @@
 .register-navigation {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 40px;
 }
 
 .register-navigation .navigation-link {
@@ -28,10 +64,11 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0 16px;
+  min-width: 110px;
+  padding: 0;
   border-radius: 15px;
   color: #111;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
@@ -118,6 +155,10 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.work-schedule-group > legend {
+  grid-column: 1 / -1;
+}
+
 .worker-count-group {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -179,11 +220,34 @@
   font-weight: 700;
 }
 
+/* 보상 입력 래퍼: 유급/봉사 조건부 렌더링 */
+.compensation-input-wrapper {
+  display: contents;
+}
+
 .compensation-inputs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-top: 23px;
+}
+
+.compensation-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compensation-input-group .form-input {
+  min-width: 0;
+}
+
+/* 보상 단위 텍스트 ("원", "시간") */
+.compensation-unit {
+  flex-shrink: 0;
+  color: #111;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .post-content-section {
@@ -205,12 +269,55 @@
   padding-bottom: 20px;
 }
 
+/* 이미지 업로드 도움말 텍스트 */
+.image-helper-text {
+  margin: 0;
+  color: #999;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* 상세 설명 헤더: 라벨과 AI 버튼 정렬 */
+.description-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* AI 공고 작성 버튼 */
+.ai-write-button {
+  box-sizing: border-box;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.ai-write-button:hover {
+  border-color: #1d5039;
+  background: #f5f8f3;
+}
+
+.ai-write-button:focus {
+  outline: 2px solid #1d5039;
+  outline-offset: 2px;
+}
+
+/* 게시하기 버튼: 화면 너비를 꽉 채우도록 */
 .register-page .register-submit-button {
   box-sizing: border-box;
-  width: 262px;
-  max-width: 100%;
+  width: 100%;
   min-height: 50px;
-  margin-right: 9px;
+  margin-right: 0;
   border: 0;
   border-radius: 15px;
   background: #1d5039;

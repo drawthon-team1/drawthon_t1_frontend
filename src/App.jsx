@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // pages 폴더에 있는 실제 9개의 화면(컴포넌트) 파일 이름에 맞춰서 불러옵니다.
@@ -12,6 +13,9 @@ import MatchSelect from './pages/MatchSelect';
 import MyPage from './pages/MyPage';
 
 function App() {
+  const [matchMode, setMatchMode] = useState('postFirst');
+  const [selectedPost, setSelectedPost] = useState(null);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -26,8 +30,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         
         {/* 팀 매칭 및 마이페이지 */}
-        <Route path="/match" element={<Match />} />
-        <Route path="/match-select" element={<MatchSelect />} />
+        <Route path="/match" element={<Match matchMode={matchMode} setMatchMode={setMatchMode} selectedPost={selectedPost} />} />
+        <Route path="/match-select" element={<MatchSelect selectedPost={selectedPost} onConfirmPost={setSelectedPost} />} />
         <Route path="/mypage" element={<MyPage />} />
       </Routes>
     </BrowserRouter>
