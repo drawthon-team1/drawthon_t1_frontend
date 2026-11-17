@@ -178,7 +178,8 @@ const Match = ({ matchMode, setMatchMode, selectedPost, selectedTeam, onSelectTe
         <ul className="waiting-room-members" aria-label="팀원 목록">
           {team.members.map((member) => (
             <li className="waiting-room-member" key={member.memberId}>
-              {member.nickname}{member.role === 'OWNER' && ' (팀장)'}
+              {member.nickname}
+              {member.role === 'OWNER' && <div style={{ marginTop: '4px', fontSize: '10px', opacity: 0.8 }}>[팀장]</div>}
             </li>
           ))}
         </ul>
