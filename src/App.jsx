@@ -30,9 +30,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         
-        {/* 공고 관련 페이지. 공고 API는 로그인이 필요하고, 공고 등록은 ADMIN만 가능하다 */}
-        <Route path="/postings" element={<RequireAuth><PostList /></RequireAuth>} />
-        <Route path="/detail/:id" element={<RequireAuth><PostDetail /></RequireAuth>} />
+        {/* 공고 관련 페이지. 목록·상세는 누구나 볼 수 있고, 신청은 로그인, 공고 등록은 ADMIN만 가능하다 */}
+        <Route path="/postings" element={<PostList />} />
+        <Route path="/detail/:id" element={<PostDetail />} />
         <Route path="/register" element={<RequireAuth adminOnly><Register /></RequireAuth>} />
         
         {/* 팀 매칭 및 마이페이지 */}

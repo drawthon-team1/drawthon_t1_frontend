@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import { useAuth } from '../auth/AuthContext';
 import { applyPosting, getPosting, withdrawPosting } from '../api/postApi';
@@ -12,6 +12,8 @@ import './PostDetail.css';
 const PostDetail = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   // { id, post, error }: 주소의 공고 ID가 바뀌면 이전 결과를 쓰지 않는다.
   const [loaded, setLoaded] = useState(null);
   const [actionError, setActionError] = useState('');
@@ -73,8 +75,9 @@ const PostDetail = () => {
 
   const isVolunteer = post.rewardType === 'VOLUNTEER_HOURS';
   const applyLabel = isVolunteer ? '봉사 신청하기' : '일자리 신청하기';
-  const canApply = user?.role === 'USER' && !applied
-    && (post.recruitmentStatus === 'RECRUITING' || post.recruitmentStatus === 'CLOSING_SOON');
+  const isOpen = post.recruitmentStatus === 'RECRUITING' || post.recruitmentStatus === 'CLOSING_SOON';
+  const canApply = user?.role === 'USER' && !applied && isOpen;
+  const goLogin = () => navigate('/login', { state: { from: location.pathname, message: '로그인하면 공고에 신청할 수 있어요.' } });
 
   return (
     <div className="post-detail-page">
@@ -157,10 +160,10 @@ const PostDetail = () => {
               <button
                 className="post-apply-button"
                 type="button"
-                disabled={!canApply || submitting}
-                onClick={() => runAction(applyPosting, () => setApplied(true))}
+                disabled={user ? !canApply || submitting : !isOpen}
+                onClick={() => (user ? runAction(applyPosting, () => setApplied(true)) : goLogin())}
               >
-                {submitting ? '신청 중...' : applyLabel}
+                {submitting ? '신청 중...' : user ? applyLabel : `로그인하고 ${applyLabel}`}
               </button>
             </section>
           </div>
