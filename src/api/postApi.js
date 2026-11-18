@@ -14,8 +14,9 @@ const toParams = (filters = {}) => Object.fromEntries(
  * durations[], timeSlots[], statuses[], workTypes[] }
  */
 export const getPostings = async (filters) => {
-  const { data } = await api.get(BASE, { params: toParams(filters) });
-  return data;
+  /**const { data } = await api.get(BASE, { params: toParams(filters) });
+  return data;*/
+  return [];
 };
 
 export const getPosting = async (postingId) => {

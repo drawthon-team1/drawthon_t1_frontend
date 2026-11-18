@@ -22,8 +22,13 @@ export const login = async ({ email, password }) => {
 /** 로그인한 회원 정보. 로그인하지 않았으면 null */
 export const getMe = async () => {
   try {
-    const { data } = await api.get('/api/auth/me');
-    return data;
+    /**const { data } = await api.get('/api/auth/me');
+    return data; */
+    return { 
+      email: "test@test.com", 
+      nickname: "이상미", 
+      role: "USER" 
+    };
   } catch (error) {
     if (error.response?.status === 401 || error.response?.status === 403) {
       return null;
