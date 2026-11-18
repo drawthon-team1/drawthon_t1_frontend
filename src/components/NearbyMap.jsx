@@ -2,9 +2,16 @@ import { useEffect, useState } from 'react';
 import { Map, MapMarker, useKakaoLoader } from 'react-kakao-maps-sdk';
 import { getMapNotices } from '../api/mapApi';
 
-const CENTER = { lat: 36.8082, lng: 127.1471 };
+const CENTER = { lat: 36.45, lng: 127.8 };
 const MAP_STYLE = { width: '100%', height: '400px' };
-const MAP_LEVEL = 3;
+
+const fitSouthKorea = (map) => {
+  const bounds = new window.kakao.maps.LatLngBounds(
+    new window.kakao.maps.LatLng(34.25, 125.9),
+    new window.kakao.maps.LatLng(38.65, 129.65),
+  );
+  map.setBounds(bounds);
+};
 
 const NearbyMap = () => {
   const [notices, setNotices] = useState([]);
@@ -43,7 +50,7 @@ const NearbyMap = () => {
   return (
     <>
       {noticeError && <p role="status">지도 공고를 불러오지 못했습니다.</p>}
-      <Map center={CENTER} style={MAP_STYLE} level={MAP_LEVEL}>
+      <Map center={CENTER} style={MAP_STYLE} onCreate={fitSouthKorea}>
         {notices.map((notice) => (
           <MapMarker
             key={notice.noticeId}
