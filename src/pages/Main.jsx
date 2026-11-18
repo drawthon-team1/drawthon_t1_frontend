@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
+import NearbyMap from '../components/NearbyMap';
 import { getPostings } from '../api/postApi';
 import { getErrorMessage } from '../api/axios';
 import { toPostCard } from '../api/postFormat';
@@ -85,16 +86,7 @@ const Main = () => {
 
         <section className="nearby-jobs-section" aria-labelledby="nearby-jobs-title">
           <h1 id="nearby-jobs-title">내 주변 농촌 일자리</h1>
-          {/* TODO: 카카오맵 연동 전까지는 시안용 지도를 그대로 둔다 */}
-          <section className="map-container" aria-label="충남권 시안용 지도">
-            <h2 className="map-title">충남권 지도</h2>
-            <ul className="map-locations">
-              <li className="map-location map-location-asan">아산시</li>
-              <li className="map-location map-location-cheonan">천안시</li>
-              <li className="map-location map-location-yesan">예산군</li>
-            </ul>
-            <p className="map-caption">시안용 지도</p>
-          </section>
+          <NearbyMap />
         </section>
 
         <section className="nearby-posts-section" aria-labelledby="nearby-posts-title">
