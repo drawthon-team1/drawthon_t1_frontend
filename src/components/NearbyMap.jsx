@@ -1,21 +1,58 @@
+import { useEffect, useState } from 'react';
 import { Map, MapMarker, useKakaoLoader } from 'react-kakao-maps-sdk';
+import { getMapNotices } from '../api/mapApi';
 
-const CENTER = { lat: 36.8151, lng: 127.1138 };
+const CENTER = { lat: 36.8082, lng: 127.1471 };
+const MAP_STYLE = { width: '100%', height: '400px' };
+const MAP_LEVEL = 3;
 
 const NearbyMap = () => {
+  const [notices, setNotices] = useState([]);
+  const [noticeError, setNoticeError] = useState(false);
   const [loading, error] = useKakaoLoader({
-    appkey: 'f48fee4e29630bfaef611dcb277b9d4f',
+    appkey: import.meta.env.VITE_KAKAO_JS_KEY,
   });
+
+  useEffect(() => {
+    let ignore = false;
+
+    const fetchNotices = async () => {
+      try {
+        const data = await getMapNotices();
+        if (!Array.isArray(data)) {
+          throw new Error('지도 공고 응답이 배열이 아닙니다.');
+        }
+        if (!ignore) setNotices(data);
+      } catch (fetchError) {
+        if (!ignore) {
+          console.error('지도 공고를 불러오지 못했습니다.', fetchError);
+          setNoticeError(true);
+        }
+      }
+    };
+
+    fetchNotices();
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   if (loading) return <div>지도 가져오는 중...</div>;
   if (error) return <div>지도 로드 실패! 키값이나 도메인을 다시 확인하세요.</div>;
 
   return (
-    <Map center={CENTER} style={{ width: '100%', height: '400px' }} level={3}>
-      <MapMarker position={CENTER}>
-        <div style={{ padding: '5px', color: '#000' }}>여기가 일터입니다!</div>
-      </MapMarker>
-    </Map>
+    <>
+      {noticeError && <p role="status">지도 공고를 불러오지 못했습니다.</p>}
+      <Map center={CENTER} style={MAP_STYLE} level={MAP_LEVEL}>
+        {notices.map((notice) => (
+          <MapMarker
+            key={notice.noticeId}
+            position={{ lat: notice.latitude, lng: notice.longitude }}
+            title={notice.title}
+          />
+        ))}
+      </Map>
+    </>
   );
 };
 
