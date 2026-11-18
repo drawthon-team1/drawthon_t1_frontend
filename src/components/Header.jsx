@@ -20,6 +20,9 @@ const Header = () => {
 
   return (
     <header className="site-header">
+      <NavLink className="site-logo" to="/" aria-label="일손잇수 홈으로 이동">
+        <img src="/images/logo.png" alt="일손잇수" />
+      </NavLink>
       <nav className="site-navigation" aria-label="주요 메뉴">
         <NavLink className={linkClass} to="/" end>홈</NavLink>
         <NavLink className={linkClass} to="/postings">공고 목록</NavLink>
