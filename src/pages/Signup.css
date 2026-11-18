@@ -58,7 +58,7 @@
   margin-top: 11px;
   padding: 38px;
   background-color: #dce8da;
-  background-image: url("/images/signup-hero.jpg");
+  background-image: url("/images/hero.png");
   background-position: center;
   background-size: cover;
 }
@@ -105,9 +105,62 @@
   display: grid;
   gap: 6px;
   min-width: 0;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 1.25;
+}
+
+.signup-page .input-group label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+}
+
+.signup-page .input-group input {
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #d0d8d0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  color: #111;
+}
+
+.signup-page .signup-admin-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #111;
+  margin-bottom: 16px;
+}
+
+.signup-page .signup-admin-option input[type="checkbox"] {
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.signup-form .form-error {
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 6px;
+  margin: 8px 0;
+  background-color: #fee;
+  color: #c33;
+}
+
+.signup-page .signup-submit-button:hover:not(:disabled) {
+  background-color: #154a2f;
+  cursor: pointer;
+}
+
+.signup-page .signup-submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .signup-page .signup-submit-button {
@@ -121,6 +174,7 @@
   color: #fff;
   font-family: inherit;
   font-size: 18px;
+  font-weight: 400;
 }
 
 @media (max-width: 700px) {
